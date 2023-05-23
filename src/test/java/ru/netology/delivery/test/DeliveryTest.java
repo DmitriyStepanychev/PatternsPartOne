@@ -37,24 +37,6 @@ class DeliveryTest {
         $("[data-test-id=agreement]").click();
         $x("//span[text() = 'Запланировать']").click();
 
-        /* т.к. Faker генерирует города не только из списка административных субъектов пришлось
-         * добавить логику изменения сгенерированного города, чтобы тест не крашился по данной причине */
-        if ($x("//span[text()='Доставка в выбранный город недоступна']").isDisplayed()) {
-            $("[data-test-id=city] input").sendKeys(Keys.SHIFT, Keys.HOME, Keys.DELETE);
-            $("[data-test-id=city] input").setValue(DataGenerator.generateCity("ru"));
-            /* при использовании ValidUser.getCity, подставляется ранеее сгенерированные город,
-             * который не подходит под параметры. Генерирую новый город с помощью прямого вызова
-             * DataGenerator.generateCity*/
-            $x("//span[text() = 'Запланировать']").click();
-        }
-        /* такую же логику написал на проверку имени, т.к. Faker генерирует имена и фамилии с буквой ё,
-        * а форма анкеты не пропускает их с ошибкой */
-        if ($x("//span[text()='Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы']").isDisplayed()) {
-            $("[data-test-id=name] input").sendKeys(Keys.SHIFT, Keys.HOME, Keys.DELETE);
-            $("[data-test-id=name] input").setValue(DataGenerator.generateName("ru"));
-            $x("//span[text() = 'Запланировать']").click();
-        }
-
         $("[data-test-id=success-notification]  .notification__content")
                 .shouldBe(Condition.visible,
                         Duration.ofSeconds(15))
